@@ -66,3 +66,19 @@ begin
     dbms_output.put_line(v_emps.employee_id|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name|| ' ' || TO_CHAR(v_emps.salary, 'fmL99G999D00'));
   end loop;
 end; 
+
+
+-- for loop encadeado com parametro
+-- cursor explicito com for passando select 
+set serveroutput on;
+declare
+ cursor c_emps(depart_id number) is (select * from employees where salary > 10000 and department_id = depart_id)  ; 
+begin
+ -- open c_emps;
+ for v_depart in (select department_id, department_name from departments) loop
+    dbms_output.put_line('---- > Departamento : '|| v_depart.department_name);
+    for v_emps in c_emps(v_depart.department_id) loop
+        dbms_output.put_line(v_emps.employee_id|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name|| ' ' || TO_CHAR(v_emps.salary, 'fmL99G999D00'));
+    end loop;
+ end loop;
+end; 
